@@ -11,9 +11,9 @@ npm run dev
 
 ## Data and cadence
 
-The app requests daily history from data.gov.sg's NEA-backed `/v2/real-time/api/pm25` and `/psi` endpoints, following every pagination token. It includes every available published timestamp from 1 August 2026 onward, caches completed days in the browser, and loads selected date ranges with two concurrent requests with a shared 2.1-second pace and retries for rate limiting. NEA publishes 1-hour PM₂.₅ and 24-hour PSI readings hourly. No 15-minute measurements are fabricated.
+The site bundles [src/readings.json](src/readings.json), a saved archive of NEA-backed readings from data.gov.sg's `/v2/real-time/api/pm25` and `/psi` endpoints. All map times and chart ranges read this file immediately in the browser. The browser does not call the API. NEA publishes 1-hour PM₂.₅ and 24-hour PSI readings hourly. No 15-minute measurements are fabricated.
 
-No API key is embedded in the client. The public API was verified from the deployed page on 23 October 2026. Long uncached ranges can take several minutes because public API access is rate limited; completed days are cached in the browser.
+Run `npm run update-data` to refresh the archive. The script follows pagination, spaces requests to respect the public rate limit, retries throttled responses, saves each completed day, and rechecks yesterday and today. The GitHub Pages workflow runs this hourly and commits changed readings before rebuilding the site. If the API fails, the workflow fails rather than publishing an incomplete day as an empty gap. No API key is embedded in the client.
 
 ## Deploy
 
