@@ -3,18 +3,13 @@
 
 .region-hit:focus-visible .region-label-bg{stroke:#c48343;stroke-width:3}
 
-/* The selected measure's NEA bands stay visible above the map. */
-.map-toolbar{height:auto;min-height:94px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:9px;padding:9px 20px 7px}
-.map-toolbar-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
-.map-legend-title{font:700 11px Manrope,sans-serif;color:#385b43;white-space:nowrap}
-.map-toolbar .metric-switch{margin-left:0;flex:none}
-.map-legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;width:100%}
-.map-legend-item{display:grid;grid-template-columns:8px minmax(0,1fr);grid-template-rows:auto auto;column-gap:5px;align-items:start;min-width:0;font:700 10px/1.2 'DM Sans',sans-serif;color:#35553e}
-.map-legend-item i{grid-row:1/3;display:block;width:8px;height:18px;border-radius:3px}
-.map-legend-item span{overflow-wrap:anywhere}
-.map-legend-item small{font:600 9px/1.2 'DM Sans',sans-serif;color:#607a64;font-variant-numeric:tabular-nums}
-@media(max-width:700px){.map-toolbar{min-height:83px;gap:5px;padding:5px 10px}.map-legend-title{font-size:9px}.map-legend-item{font-size:9px;column-gap:3px}.map-legend-item small{font-size:8px}.map-legend-item i{width:6px;height:16px}}
-.map-stage .island-map{width:100%;height:100%;max-height:100%}
+/* Compact colour key beside the map. */
 .map-stage{position:relative}
-.map-stage .island-map{position:absolute;inset:0;width:100%;height:100%}
-@media(max-width:700px) and (max-height:700px){.has-selection .map-panel{flex-basis:46%}}
+.map-stage .island-map{position:absolute;inset:0;width:100%;height:100%;max-height:100%}
+.map-legend{position:absolute;z-index:1;top:13px;left:17px;display:flex;flex-direction:column;gap:4px;width:149px;color:#35553e}
+.map-legend>strong{margin-bottom:3px;font:700 11px Manrope,sans-serif}
+.map-legend-item{display:grid;grid-template-columns:8px minmax(0,1fr) auto;align-items:center;gap:6px;font:700 10px/1.25 'DM Sans',sans-serif}
+.map-legend-item i{display:block;width:8px;height:12px;border-radius:2px}
+.map-legend-item small{font:600 9px/1.25 'DM Sans',sans-serif;color:#5e7663;font-variant-numeric:tabular-nums}
+@media(max-width:700px){.map-legend{top:7px;left:10px;width:135px;gap:3px}.map-legend>strong{font-size:10px}.map-legend-item{font-size:9px;gap:4px}.map-legend-item small{font-size:8px}.has-selection .map-stage .island-map{left:120px;width:calc(100% - 120px)}}
+@media(max-width:700px) and (max-height:700px){.has-selection .map-panel{flex-basis:42%}}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { bandFor } from './data';
+import { bandFor, METRICS } from './data';
 
 const SHAPE = 'M 59 179 C 85 156 115 147 138 126 L 180 120 206 105 250 96 284 86 315 90 342 101 371 95 407 105 438 128 465 120 493 132 518 130 547 150 586 155 613 170 639 177 668 202 708 211 749 212 770 227 747 245 720 250 685 269 649 277 619 294 577 294 550 305 516 293 478 310 447 300 409 309 376 310 347 329 321 315 291 315 267 300 241 302 213 286 183 281 160 263 129 254 108 239 79 229 58 211 Z';
 const CELLS = [
@@ -27,6 +27,13 @@ function RegionLabel({ cell, pm, psi, selected, onSelect }) {
 }
 export default function SingaporeMap({ selected, onSelect, metric, values }) {
   return <div className="map-stage">
+    <div className="map-legend" aria-label={`${METRICS[metric].label} colour bands`}>
+      <strong>{metric === 'pm25' ? '1h PM₂.₅ · µg/m³' : '24h PSI'}</strong>
+      {METRICS[metric].bands.map((band, index) => <div className="map-legend-item" key={band.label}>
+        <i style={{ backgroundColor: band.color }}/><span>{band.label}</span>
+        <small>{Number.isFinite(band.max) ? `${index === 0 ? 0 : METRICS[metric].bands[index - 1].max + 1}–${band.max}` : `≥${METRICS[metric].bands[index - 1].max + 1}`}</small>
+      </div>)}
+    </div>
     <svg className="island-map" viewBox="0 0 800 380" role="img" aria-label="Singapore schematic map with five selectable NEA reporting regions">
       <defs><clipPath id="island-boundary"><path d={SHAPE}/></clipPath></defs>
       <path d={SHAPE} transform="translate(0 7)" fill="#829b84" opacity=".75"/>
