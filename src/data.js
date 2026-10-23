@@ -37,18 +37,22 @@ async function fetchPage(metric, day, token, signal) {
 }
 export async function fetchDay(metric, day, signal) {
   const key = `${metric}:${day}`;
-  if (memory.has(key)) return memory.get(key);
-  try { const saved = JSON.parse(localStorage.getItem(`haze:${key}`)); if (saved && Date.now() - saved.savedAt < (day === todaySgt() ? 15 * 60_000 : 30 * 24 * 60 * 60_000)) { memory.set(key, saved.items); return saved.items; } } catch { /* storage unavailable */ }
+  const ttl = day === todaySgt() ? 15 * 60_000 : 30 * 24 * 60 * 60_000;
+  const cached = memory.get(key);
+  if (cached && Date.now() - cached.savedAt < ttl) return cached.items;
+  try { const saved = JSON.parse(localStorage.getItem(`haze:${key}`)); if (saved && Date.now() - saved.savedAt < ttl) { memory.set(key, saved); return saved.items; } } catch { /* storage unavailable */ }
   let token; const items = [];
   do {
     const data = await fetchPage(metric, day, token, signal);
     items.push(...(data.items || []));
     token = data.paginationToken || undefined;
   } while (token);
-  memory.set(key, items);
-  try { localStorage.setItem(`haze:${key}`, JSON.stringify({ savedAt: Date.now(), items })); } catch { /* storage unavailable */ }
+  const record = { savedAt: Date.now(), items };
+  memory.set(key, record);
+  try { localStorage.setItem(`haze:${key}`, JSON.stringify(record)); } catch { /* storage unavailable */ }
   return items;
 }
+export function invalidateDay(metric, day) { const key = `${metric}:${day}`; memory.delete(key); try { localStorage.removeItem(`haze:${key}`); } catch { /* storage unavailable */ } }
 export async function fetchRange(metric, start, end, signal, onProgress) {
   const days = datesBetween(start, end);
   const results = new Array(days.length);

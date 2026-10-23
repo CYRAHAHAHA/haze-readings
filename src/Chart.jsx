@@ -40,7 +40,7 @@ export default function Chart({ points, metric, start, end }) {
       <defs><linearGradient id={`reading-bands-${metric}`} gradientUnits="userSpaceOnUse" x1="0" y1={T} x2="0" y2={H-B}>{colorStops.map((stop, i) => <stop key={i} offset={stop.offset} stopColor={stop.color}/>)}</linearGradient></defs>
       {bands.map((band, i) => { const low = i === 0 ? 0 : bands[i-1].max; const high = Math.min(band.max, maxY); return low < maxY && <rect key={band.label} x={L} y={y(high)} width={W-L-R} height={y(low)-y(high)} fill={band.color} opacity=".095"/>; })}
       {ticks.map((tick) => <g key={tick}><line x1={L} x2={W-R} y1={y(tick)} y2={y(tick)} stroke="#d9e1da"/><text x={L-10} y={y(tick)+4} textAnchor="end" className="axis-text">{tick}</text></g>)}
-      {dateTicks.map((tick, i) => <text key={i} x={x(tick)} y={H-7} textAnchor={i === 0 ? 'start' : i === 4 ? 'end' : 'middle'} className="axis-text">{fmt(tick, { day: 'numeric', month: 'short' })}</text>)}
+      {dateTicks.map((tick, i) => <text key={i} x={x(tick)} y={H-7} textAnchor={i === 0 ? 'start' : i === 4 ? 'end' : 'middle'} className="axis-text">{fmt(tick, start === end ? { hour: 'numeric', minute: '2-digit' } : { day: 'numeric', month: 'short' })}</text>)}
       {paths.map((path, i) => <polyline key={i} points={path.map((p) => `${x(p.t)},${y(p.value)}`).join(' ')} fill="none" stroke={`url(#reading-bands-${metric})`} strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"/>)}
       {hover && <><line x1={x(hover.t)} x2={x(hover.t)} y1={T} y2={H-B} stroke="#536c5e" strokeDasharray="4 4"/><circle cx={x(hover.t)} cy={y(hover.value)} r="5" fill={bandFor(metric, hover.value).color} stroke="white" strokeWidth="2"/></>}
     </svg>

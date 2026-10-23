@@ -1,6 +1,6 @@
 # Singapore Haze Readings
 
-A standalone GitHub Pages site for NEA's five regional air-quality readings. The map is a schematic selection surface; its divisions are not official geographic boundaries.
+A standalone GitHub Pages site for NEA's five regional air-quality readings. The single-screen map shows both current 1-hour PM₂.₅ and 24-hour PSI readings for each region. An hourly slider explores readings since 1 August 2026; selecting a region opens its history chart alongside the map. The map divisions are schematic, not official geographic boundaries.
 
 ## Run
 
