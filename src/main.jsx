@@ -46,7 +46,10 @@ function App() {
     <header className="site-header"><h1 className="brand"><span className="brand-symbol"><i/><i/><i/></span>Singapore haze</h1><a href="https://guide.data.gov.sg/developer-guide/real-time-apis" target="_blank" rel="noreferrer" className="source-link">NEA data</a></header>
     <div className="workspace">
       <section className="map-panel" aria-label="Singapore air quality map">
-        <div className="map-toolbar"><div className="metric-switch" role="group" aria-label="Map color scale"><button className={metric === 'pm25' ? 'active' : ''} onClick={() => setMetric('pm25')}>1h PM₂.₅</button><button className={metric === 'psi' ? 'active' : ''} onClick={() => setMetric('psi')}>24h PSI</button></div></div>
+        <div className="map-toolbar">
+          <div className="map-toolbar-top"><strong className="map-legend-title">{metric === 'pm25' ? '1h PM₂.₅ · µg/m³' : '24h PSI'} colour key</strong><div className="metric-switch" role="group" aria-label="Map color scale"><button className={metric === 'pm25' ? 'active' : ''} onClick={() => setMetric('pm25')}>1h PM₂.₅</button><button className={metric === 'psi' ? 'active' : ''} onClick={() => setMetric('psi')}>24h PSI</button></div></div>
+          <div className="map-legend" aria-label={`${METRICS[metric].label} colour bands`}>{METRICS[metric].bands.map((band, i) => <div className="map-legend-item" key={band.label}><i style={{ backgroundColor: band.color }}/><span>{band.label}</span><small>{Number.isFinite(band.max) ? `${i === 0 ? 0 : METRICS[metric].bands[i - 1].max + 1}–${band.max}` : `≥${METRICS[metric].bands[i - 1].max + 1}`}</small></div>)}</div>
+        </div>
         <SingaporeMap selected={selected} onSelect={setSelected} metric={metric} values={values}/>
         <div className="time-control"><div className="time-heading"><time dateTime={new Date(time).toISOString()}>{fmtDate(time)} SGT</time><button onClick={() => setViewTime(null)} disabled={viewTime === null} className="latest-button">Latest</button></div><input className="time-slider" type="range" min="0" max={maxHours} step="1" value={hourIndex} onChange={handleSlider} aria-label="Map reading time"/><div className="time-ends"><span>1 Aug 2026</span><span>{new Intl.DateTimeFormat('en-SG', { timeZone: 'Asia/Singapore', day: 'numeric', month: 'short', year: 'numeric' }).format(latestTime)}</span></div></div>
       </section>
@@ -57,7 +60,6 @@ function App() {
         <div className="chart-heading"><strong>{METRICS[metric].label}</strong></div>
         <div className="chart-area">{!valid ? <p className="notice">Choose dates from 1 Aug 2026 through today, with the start before the end.</p> : points.length ? <Chart points={points} metric={metric} start={bounds.start} end={bounds.end}/> : <p className="notice">No readings for this range.</p>}</div>
         <div className="chart-bottom"><span>{bounds.start} – {bounds.end}</span><span>{`${points.length.toLocaleString()} readings`}</span></div>
-        <div className="band-legend" aria-label={`${METRICS[metric].label} bands`}>{METRICS[metric].bands.map((band, i) => <div key={band.label}><i style={{background:band.color}}/><span>{band.label}</span><small>{Number.isFinite(band.max) ? `${i === 0 ? 0 : METRICS[metric].bands[i - 1].max + 1}–${band.max}` : `≥${METRICS[metric].bands[i - 1].max + 1}`}</small></div>)}</div>
       </section>}
     </div>
   </main>;
