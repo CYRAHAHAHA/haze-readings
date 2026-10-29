@@ -7,7 +7,8 @@ export default function Chart({ points, metric, start, end }) {
   const bands = METRICS[metric].bands;
   const maxData = Math.max(...points.map((p) => p.value), 0);
   const maxY = Math.max(metric === 'psi' ? 110 : 65, Math.ceil(maxData * 1.1 / 10) * 10);
-  const minX = Date.parse(`${start}T00:00:00+08:00`), maxX = Date.parse(`${end}T23:59:59+08:00`);
+  const minX = start.includes('T') ? Date.parse(start) : Date.parse(`${start}T00:00:00+08:00`);
+  const maxX = end.includes('T') ? Date.parse(end) : Date.parse(`${end}T23:59:59+08:00`);
   const x = (t) => L + (t - minX) / (maxX - minX) * (W - L - R);
   const y = (v) => T + (1 - v / maxY) * (H - T - B);
   const ticks = Array.from({ length: 5 }, (_, i) => Math.round(maxY * i / 4));
@@ -40,7 +41,7 @@ export default function Chart({ points, metric, start, end }) {
       <defs><linearGradient id={`reading-bands-${metric}`} gradientUnits="userSpaceOnUse" x1="0" y1={T} x2="0" y2={H-B}>{colorStops.map((stop, i) => <stop key={i} offset={stop.offset} stopColor={stop.color}/>)}</linearGradient></defs>
       {bands.map((band, i) => { const low = i === 0 ? 0 : bands[i-1].max; const high = Math.min(band.max, maxY); return low < maxY && <rect key={band.label} x={L} y={y(high)} width={W-L-R} height={y(low)-y(high)} fill={band.color} opacity=".095"/>; })}
       {ticks.map((tick) => <g key={tick}><line x1={L} x2={W-R} y1={y(tick)} y2={y(tick)} stroke="#d9e1da"/><text x={L-10} y={y(tick)+4} textAnchor="end" className="axis-text">{tick}</text></g>)}
-      {dateTicks.map((tick, i) => <text key={i} x={x(tick)} y={H-7} textAnchor={i === 0 ? 'start' : i === 4 ? 'end' : 'middle'} className="axis-text">{fmt(tick, start === end ? { hour: 'numeric', minute: '2-digit' } : { day: 'numeric', month: 'short' })}</text>)}
+      {dateTicks.map((tick, i) => <text key={i} x={x(tick)} y={H-7} textAnchor={i === 0 ? 'start' : i === 4 ? 'end' : 'middle'} className="axis-text">{fmt(tick, start.includes('T') || start === end ? { hour: 'numeric', minute: '2-digit' } : { day: 'numeric', month: 'short' })}</text>)}
       {paths.map((path, i) => <polyline key={i} points={path.map((p) => `${x(p.t)},${y(p.value)}`).join(' ')} fill="none" stroke={`url(#reading-bands-${metric})`} strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"/>)}
       {hover && <><line x1={x(hover.t)} x2={x(hover.t)} y1={T} y2={H-B} stroke="#536c5e" strokeDasharray="4 4"/><circle cx={x(hover.t)} cy={y(hover.value)} r="5" fill={bandFor(metric, hover.value).color} stroke="white" strokeWidth="2"/></>}
     </svg>

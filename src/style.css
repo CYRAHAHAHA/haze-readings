@@ -6,6 +6,16 @@
 /* Compact colour key beside the map. */
 .map-stage{position:relative}
 .map-stage .island-map{position:absolute;inset:0;width:100%;height:100%;max-height:100%}
+
+.time-control .time-slider{margin:5px 0 2px}
+.slider-label{display:block;margin-top:7px;color:#506c56;font-size:10px;font-weight:800}
+.time-label{margin-top:8px}
+.preset-row{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:6px}
+.preset-row>span{color:#6b806e;font-size:10px;font-weight:800}
+.detail-controls{display:grid;gap:6px}
+.detail-controls .range-buttons{width:100%;justify-content:stretch}
+.detail-controls .range-buttons button{flex:1;padding:8px 5px;font-size:12px}
+@media(max-width:700px){.slider-label{margin-top:4px}.time-label{margin-top:5px}.detail-controls .range-buttons button{padding:6px 3px;font-size:10px}.preset-row{grid-template-columns:39px minmax(0,1fr);gap:4px}}
 .map-legend{position:absolute;z-index:1;top:13px;left:17px;display:flex;flex-direction:column;gap:4px;width:149px;color:#35553e}
 .map-legend>strong{margin-bottom:3px;font:700 11px Manrope,sans-serif}
 .map-legend-item{display:grid;grid-template-columns:8px minmax(0,1fr) auto;align-items:center;gap:6px;font:700 10px/1.25 'DM Sans',sans-serif}
